@@ -30,7 +30,7 @@ static char	**go_to_path(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strnstr(envp[i], "PATH", i))
+		if (ft_strnstr(envp[i], "PATH", 4))
 			return (ft_split(envp[i] + 5, ':'));
 		i++;
 	}
