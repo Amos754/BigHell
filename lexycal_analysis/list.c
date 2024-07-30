@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abolor-e <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:47:28 by abolor-e          #+#    #+#             */
+/*   Updated: 2024/07/16 15:47:44 by abolor-e         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 t_ttypes	catego_toketype(char *content, int c)
@@ -20,8 +32,9 @@ t_ttypes	catego_toketype(char *content, int c)
 
 void	ft_tokenadd_back(t_token **lst, t_token *new)
 {
-	t_token	*current = NULL;
+	t_token	*current;
 
+	current = NULL;
 	if (!(*lst))
 	{
 		(*lst) = new;
@@ -37,7 +50,7 @@ void	ft_tokenadd_back(t_token **lst, t_token *new)
 
 t_token	*ft_newtoken(void *content, int c)
 {
-	t_token		*re = NULL;
+	t_token		*re;
 
 	re = (t_token *)malloc(sizeof(t_token));
 	if (!re)

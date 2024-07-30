@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tree.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abolor-e <abolor-e@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 15:04:35 by abolor-e          #+#    #+#             */
+/*   Updated: 2024/07/19 15:01:43 by abolor-e         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 t_tree	*ms_stack_to_node(t_stack *popped)
@@ -23,39 +35,6 @@ t_tree	*ms_stack_to_node(t_stack *popped)
 		return (node);
 	}
 	return (NULL);
-}
-
-/*
-** REMOVE NODE FROM LIST
-** Remove a node from the node list that will be attached under a reduction
-** node
-*/
-
-void	ms_remove_node_from_list(t_tree **tree, t_tree *node)
-{
-	t_tree	*previous = NULL;
-	t_tree	*tmp = NULL;
-
-	if (*tree == node)
-	{
-		*tree = node->next;
-		return ;
-	}
-	else
-	{
-		previous = NULL;
-		tmp = *tree;
-		while (tmp)
-		{
-			if (tmp == node)
-			{
-				previous->next = tmp->next;
-				return ;
-			}
-			previous = tmp;
-			tmp = tmp->next;
-		}
-	}
 }
 
 /*
@@ -119,10 +98,11 @@ t_tree	*ms_add_reduction_front(t_tree **tree, int reduction)
 int	ms_build_tree(t_tree **tree, t_tree *reduc_node, t_stack **popped)
 {
 	int		i;
-	t_tree	*child = NULL;
+	t_tree	*child;
 	t_stack	*begin;
 
 	i = -1;
+	child = NULL;
 	begin = *popped;
 	while (*popped)
 	{
@@ -152,8 +132,9 @@ int	ms_build_tree(t_tree **tree, t_tree *reduc_node, t_stack **popped)
 
 int	ms_add_tree(t_tree **tree, t_stack **popped, int reduction)
 {
-	t_tree	*reduc_node = NULL;
+	t_tree	*reduc_node;
 
+	reduc_node = NULL;
 	reduc_node = ms_add_reduction_front(tree, reduction);
 	if (reduc_node)
 	{

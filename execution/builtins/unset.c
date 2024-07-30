@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 15:16:17 by abolor-e          #+#    #+#             */
+/*   Updated: 2024/07/26 13:08:06 by marechaloli      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 t_envb	*new_env(t_envb *env, int nbr)
@@ -45,6 +57,5 @@ int	main_unset(int ac, char **av, t_envb *env)
 	if (return_value > 0)
 		return_value = 1;
 	free(env->pwd);
-	free(env);
 	return (return_value);
 }

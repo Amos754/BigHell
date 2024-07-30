@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abolor-e <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 15:12:51 by abolor-e          #+#    #+#             */
+/*   Updated: 2024/07/17 15:12:52 by abolor-e         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 int	check_av_size(char *str)
@@ -16,7 +28,6 @@ int	check_av_size(char *str)
 			return (1);
 		else
 			return (0);
-
 	}
 	else
 		return (0);
@@ -25,25 +36,20 @@ int	check_av_size(char *str)
 int	main_exit(int ac, char **av)
 {
 	if (ac == 1)
-	{
-		printf("exit\n");
-		return (0);
-	}
+		return (printf("exit\n"), 0);
 	if (av[1] && (!(av[1][0] >= '0' && av[1][0] <= '9' || (av[1][0] == '+'
 		&& (av[1][1] >= '0' && av[1][1] <= '9'))
 		|| (av[1][0] == '-' && (av[1][1] >= '0' && av[1][1] <= '9'))))
 		|| check_av_size(av[1]) == 1)
 	{
-		printf("exit\n");
-		write(2, "minishell: exit: ", 18);
+		write(2, "exit\nminishell: exit: ", 23);
 		write(2, av[1], ft_strlen(av[1]));
 		write(2, ": numeric argument required\n", 29);
 		exit (255);
 	}
 	if (ac > 2)
 	{
-		write(2, "exit\n", 6);
-		write(2, "minishell: exit: too many arguments\n", 37);
+		write(2, "exit\nminishell: exit: too many arguments\n", 42);
 		return (1);
 	}
 	if (ac == 2)

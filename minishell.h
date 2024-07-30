@@ -18,7 +18,8 @@
 
 
 # define LINES				100
-# define BISON_AUTOMATON	"./syntax_analysis/parsing_table"
+# define BISON_AUTOMATON	"/syntax_analysis/parsing_table"
+
 # define ERROR -1
 
 typedef struct s_command {
@@ -99,15 +100,6 @@ typedef struct s_tree
 	int				qt_rm;
 }				t_tree;
 
-typedef struct s_toolkit
-{
-	// char	*history;
-	t_tree	*tree;
-	// char	**envp;
-	t_table	**parsing_table;
-	int		*hd_fds;
-}	t_toolkit;
-
 typedef enum e_token_types
 {
 	T_END = -2,
@@ -144,46 +136,62 @@ typedef struct s_env
 
 extern t_env	*g_envp;
 
-typedef struct s_cd
+typedef struct s_varcomb
 {
-	char	*ar;
-	char	*code;
+	char	*str;
+	char	*exit;
+}				t_varcomb;
 
-}	t_cd;
+typedef struct s_varquote
+{
+	int	a;
+	int	i;
+	int	qt;
+}				t_varquote;
 
 typedef struct s_envb
 {
 	int		shlvl;
+	int		exstatus;
 	char	*pwd;
 	char	*oldpwd;
 	char	**env;
 	char	*usr;
+	int		i;
 }	t_envb;
 
 //Lexical!
+//Newly added function to minimize 25 lines functions!
+t_token	*ft_token(char *line, t_sdQuote sdquote, char *exit);
+void	sep_util(char *line, int a, t_sdQuote *sdq);
+int	replace_var_util(char *str, int length, char *new, int *i_new);
+void	initial(char *new);
+
+
+
 t_token *ft_lexer(char *line);
 t_token	*ft_newtoken(void *content, int c);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 t_ttypes	catego_toketype(char *content, int c);
 t_token *token_creation(int token_len, char *line, char *exit, int *q);
-int	check_env(char *str, char *exit, char *new, int *i, int *i_new);
+int	check_env(t_varcomb vc, char *new, int *i, int *i_new);
 char    *token_str(int token_len, char *line);
 
-int replace_quote(char *str, char *exit, char *new, int *i, int *i_new);
+int	replace_quote(t_varcomb vc, char *new, int *i, int *i_new);
 int sq_dollar(char *str, char sq);
-int replace_double(char *str, char *exit, char *new, int *i_new, int a, int i, int quote_type);
-int check_envvar(char *str, char *exit, char *new, int *i_new, int a, int i, int quote_type);
-int replace_var(char *str, char *exit, int index, char *new, int *i_new);
+int	replace_double(t_varcomb vc, char *new, int *i_new, t_varquote i);
+int	check_envvar(t_varcomb vc, char *new, int *i_new, t_varquote i);
+int	replace_var(t_varcomb vc, int index, char *new, int *i_new);
 int replace_var_2(char *new, char *newstr, int *i_new, int len);
 int envvar_len(char *str);
-int strchr_check(char *str, int temp, int i, char sd);
+int	strchr_ck(char *str, int temp, int i, char sd);
 int check_ds(char *str, int a, int i);
 int check_quote(int *i, char *str);
 int quote_count(int *i, char *str, t_sdQuote *quote);
 int quote_type(t_sdQuote *quote);
 
-void    init_sdQuote(t_sdQuote *q);
-int sep_to_sep_len(char *line, t_sdQuote *sdQ);
+void    init_sdquote(t_sdQuote *q);
+int sep_to_sep_len(char *line, t_sdQuote *sdq);
 int check_sep(char c);
 int tok_sep_len(char *line, int i);
 int	ft_strcmp(const char *s1, const char *s2);
@@ -203,23 +211,23 @@ t_tree	*ms_search_reduction(t_tree **tree, int reduction);
 void	ms_remove_node_from_list(t_tree **tree, t_tree *node);
 t_tree	*ms_stack_to_node(t_stack *popped);
 
-t_tree	*syntax_analysis(t_token *token, t_table **parsing_table);
+t_tree	*syntax_analysis(t_token *token, t_table **parsingtable);
 t_tree	*ms_fix_param_types(t_tree *tree);
 static void	ms_visit_fix_types(t_tree *node);
 int	reject(void);
 int	accept(void);
-t_table *getEntry(t_token *token, t_table **parsing_table, t_stack *stack);
+t_table *getentry(t_token *token, t_table **parsingtable, t_stack *stack);
 
 t_stack *init_stack();
 //static int	shift_to_stack(t_table *table_entry, t_stack **stack, t_token **token);
 int	change_stack_state(int next_state, t_stack **stack);
 int	reduce_stack(t_table *table_entry, t_tree **tree, t_stack **stack, t_table **pt);
-int	pro_red_next_state(t_stack *stack, t_table **parsing_table);
+int	pro_red_next_state(t_stack *stack, t_table **parsingtable);
 int	push_reducted(t_stack **stack, int next);
 t_stack	*pop_oper(t_stack **stack, int reduce);
 void	pop_check(t_stack **red, t_stack *stack);
 
-t_table	**ft_init_parsing_table(void);
+t_table	**ft_init_parsing_table(char *path);
 int	ft_create_table_state(int fd, t_table **table);
 static int	free_line_args(char *line, char **args, int code);
 t_table	*ft_add_table_line(char **arg_line);
@@ -262,12 +270,31 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*get_cmd(char **paths, char *cmd);
 int	do_redirection(t_tree *ast, int error);
 int main_pipe(int ac, char **av, t_envb *env);
+char	**last_touch(char **tab, int i);
+char	**last_touch2(char **tab, int i);
+void	check_tab(char **tab);
+char	**glue_tab(char **tab, int i);
+char	**order_tab(char **tab);
+char	**new_tab(void);
+char	**init_simple_cmd(t_tree *tree, char **cmd_tab);
+int	creat_pipe(t_piped *piped, char **envp, char **av, int num_cmds);
+void	init_creat(t_piped *piped, char **envp, int num_cmds, char **av);
+void	parse_redirections(t_command *cmd_node);
+void	add_command(t_piped *piped, char *cmd);
+t_command	*create_command_node(char *cmd);
+void	adj_exec(t_command *cmd_node, t_piped *piped, char *cmd, int cmd_index);
+void	close_pipe(t_piped *piped);
+void	red_deal_out(char *cmd, t_command *cmd_node, t_piped *piped, int fd);
+void	red_deal_in(char *cmd, t_command *cmd_node, t_piped *piped, int fd);
+void	red_dealer(char *cmd, t_command *cmd_node, t_piped *piped);
+int	exit_status(int status, t_envb *env);
+void adjust_command_for_tee(t_command *cmd_node);
 /*BUILTINS*/
 int	exec_builtin(char **cmd_tab, t_envb *env);
 t_envb	*env_init(char **env);
 int	env_size(char **env);
 int	main_cd(int ac, char **av, t_envb *env);
-int	main_echo(int ac, char **av);
+int	main_echo(int ac, char **av, t_envb *env);
 int	main_exit(int ac, char **av);
 char	ft_comp(char *s1, char *s2);
 void	freetab(char **tab);
@@ -279,6 +306,15 @@ int	main_pwd(int ac, char **av);
 int	main_unset(int ac, char **av, t_envb *env);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strnstr(const char *s1, const char *s2, size_t len);
+int	cd_error(char **av, int nbr);
+char	*get_pwd(char *buff);
+void	new_env2(t_envb *env, t_envb *export, int j, char *str);
+t_envb	*new_export(t_envb *export, char *str);
+void	check_export_utils(t_envb *env, char **tmp);
+int	check_stupid(char *tmp, char stupid);
+int	check_export(char *str);
+int	check_print(char *str);
+void	print_all_utils(t_envb *env);
 // int	ms_push_state(t_stack **stack, int state);
 // int	ms_push_input(t_stack **stack, t_token *input);
 // static int	shift_to_stack(int next_state, t_stack **stack, t_token **input);

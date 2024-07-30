@@ -1,58 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 15:14:16 by abolor-e          #+#    #+#             */
+/*   Updated: 2024/07/30 01:53:44 by marechaloli      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
-int	check_export(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			return (i);
-		i++;
-	}
-	return (0);
-}
-
-int	check_print(char *str)
-{
-	int	i;
-	int	j;
-
-	while (str[i])
-		i++;
-	j = i;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			if (str[i + 1] == '"' && str[j - 1] == '"')
-				return (i);
-		i++;
-	}
-	return (0);
-}
-
-int	check_stupid(char *tmp, char stupid)
-{
-	int	i;
-
-	i = 0;
-	while (tmp[i])
-	{
-		if (tmp[i] == stupid)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void	print_all(t_envb *env)
+void	print_all(t_envb *env, int ac)
 {
 	int		i;
 	int		j;
-	char	**tmp;
-	char	**tmp2;
 
 	i = 0;
 	while (i < env_size(env->env))
@@ -66,35 +29,8 @@ void	print_all(t_envb *env)
 		}
 		i++;
 	}
-	i = 0;
-	while (i < env_size(env->env))
-	{
-		if (check_export(env->env[i]) > 0)
-		{
-			tmp = ft_split(env->env[i], '=');
-			if (check_stupid(tmp[1], '\n'))
-			{
-				tmp2 = ft_split(tmp[1], '\n');
-				if (check_stupid(tmp[1], '"'))
-					printf("declare -x %s=%s\n", tmp[0], tmp2[0]);
-				else
-					printf("declare -x %s=\"%s\"\n", tmp[0], tmp2[0]);
-				freetab(tmp);
-				freetab(tmp2);
-			}
-			else
-			{
-				if (check_stupid(tmp[1], '"'))
-					printf("declare -x %s=%s\n", tmp[0], tmp[1]);
-				else
-					printf("declare -x %s=\"%s\"\n", tmp[0], tmp[1]);
-				freetab(tmp);
-			}
-		}
-		else
-			printf("declare -x %s\n", env->env[i]);
-		i++;
-	}
+	if (ac == 1)
+		print_all_utils(env);
 }
 
 void	print_3(t_envb *env)
@@ -107,8 +43,7 @@ void	print_3(t_envb *env)
 		printf("declare -x SHLVL=\"%d\"\n", env->shlvl);
 }
 
-
-void	print_export(t_envb *env)
+void	print_export(t_envb *env, int ac)
 {
 	int	i;
 
@@ -116,57 +51,58 @@ void	print_export(t_envb *env)
 	if (!env->env)
 		print_3(env);
 	else
-		print_all(env);
+		print_all(env, ac);
 }
 
-t_envb	*new_env2(t_envb *env, t_envb *export, int j, char *str)
+int	main_export_utils(t_envb *env, t_envb *export, char **av)
 {
-	env->env[j] = str;
-	return (env);
-}
+	int	i;
+	int	j;
+	int	export_value;
+	int	return_value;
+	int	option;
 
-t_envb	*new_export(t_envb *export, char *str)
-{
-		export->env[39] = str;
-		return (export);
+	i = 0;
+	while (av[i++])
+	{
+		option = 0;
+		return_value += check_args(av[i]);
+		export_value = check_export(av[i]);
+		j = 0;
+		while (env->env[j])
+		{
+			if (!ft_strncmp(env->env[j], av[i], check_export(env->env[j])))
+			{
+				option = 1;
+				if (export_value > 0)
+					new_env2(env, export, j, av[i]);
+			}
+			j++;
+		}
+		if (!option)
+		{
+			env->env[j + 1] = NULL;
+			env->env[j] = av[i];
+		}
+	}
+	return (return_value);
 }
 
 int	main_export(int ac, char **av, t_envb *env)
 {
 	t_envb	*export;
-	int		i;
-	int		j;
 	int		return_value;
-	int		export_value;
-
-	i = 1;
-	if (ac == 1)
-		print_export(env);
+	int	tmp;
+	if (ac == 1 || ac == 0)
+	{
+		print_export(env, ac);
+	}
 	else
-	{	
-		while (av[i])
-		{
-			return_value += check_args(av[i]);
-			export_value = check_export(av[i]);
-			j = 0;
-			while (env->env[j])
-			{
-				if (!ft_strncmp(env->env[j], av[i], export_value))
-				{
-					if (export_value > 0)
-						env = new_env2(env, export, j, av[i]);
-				}
-				j++;
-			}
-			env->env[j + 1] = NULL;
-			av[i] = ft_strjoin(av[i], "\n");
-			env->env[j] = av[i];
-			i++;
-		}
-	}	
+	{
+		return_value = main_export_utils(env, export, av);
+		// main_export(0, NULL, env);
+	}
 	if (return_value > 0)
 		return_value = 1;
-	free(env->pwd);
-	free(env);
 	return (return_value);
 }

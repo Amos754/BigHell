@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 15:15:01 by abolor-e          #+#    #+#             */
+/*   Updated: 2024/07/30 00:41:36 by marechaloli      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	freetab(char **tab)
@@ -34,6 +46,8 @@ void	ft_swap(char **a, char **b)
 
 int	check_args(char *av)
 {
+	if (!av)
+		return (1);
 	if (!(av[0] >= 'a' && av[0] <= 'z')
 		&& !(av[0] >= 'A' && av[0] <= 'Z') && av[0] != '_')
 	{
@@ -45,3 +59,7 @@ int	check_args(char *av)
 	return (0);
 }
 
+void	new_env2(t_envb *env, t_envb *export, int j, char *str)
+{
+	env->env[j] = str;
+}

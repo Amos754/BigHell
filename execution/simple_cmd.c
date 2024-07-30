@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   simple_cmd.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 15:49:13 by abolor-e          #+#    #+#             */
+/*   Updated: 2024/07/26 13:38:33 by marechaloli      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	**init_pipe_cmd(t_tree *tree, char **cmd_tab)
@@ -21,27 +33,6 @@ char	**init_pipe_cmd(t_tree *tree, char **cmd_tab)
 	return (cmd_tab);
 }
 
-char	**init_simple_cmd(t_tree *tree, char **cmd_tab)
-{
-	if (!tree || !cmd_tab)
-		return (cmd_tab);
-	cmd_tab = init_simple_cmd(tree->left, cmd_tab);
-	cmd_tab = init_simple_cmd(tree->right, cmd_tab);
-	if (tree->type == A_CMD || tree->type == A_PARAM)
-			cmd_tab = add_in_tab(cmd_tab, tree->data);
-	return (cmd_tab);
-}
-
-char	**new_tab(void)
-{
-	char	**new;
-
-	new = malloc(sizeof(char **));
-	if (!new)
-		return (NULL);
-	*new = NULL;
-	return (new);
-}
 int	executor(char **cmd_tab, t_envb *env)
 {
 	char	*bin_cmd;
@@ -62,6 +53,7 @@ int	executor(char **cmd_tab, t_envb *env)
 	}
 	return (return_value);
 }
+
 int	exec_binary(char **cmd_tab, t_envb *env)
 {
 	pid_t	pid_fork;
@@ -85,7 +77,7 @@ int	exec_binary(char **cmd_tab, t_envb *env)
 		if (pid_wait == -1)
 			return (-1);
 	}
-	return (/*get_status(status)*/0);
+	return (exit_status(status, env));
 }
 
 int	exec_builtin(char **cmd_tab, t_envb *env)
@@ -96,86 +88,20 @@ int	exec_builtin(char **cmd_tab, t_envb *env)
 	while (cmd_tab[ac])
 		ac++;
 	if (!ft_strcmp("cd", cmd_tab[0]))
-		return (main_cd(ac, cmd_tab, env));
+		return (env->exstatus = main_cd(ac, cmd_tab, env));
 	if (!ft_strcmp("echo", cmd_tab[0]))
-		return (main_echo(ac, cmd_tab));
+		return (env->exstatus = main_echo(ac, cmd_tab, env));
 	if (!ft_strcmp("exit", cmd_tab[0]))
-		return (main_exit(ac, cmd_tab));
+		exit(main_exit(ac, cmd_tab));
 	if (!ft_strcmp("env", cmd_tab[0]))
-		return (main_env(ac, cmd_tab, env));
+		return (env->exstatus = main_env(ac, cmd_tab, env));
 	if (!ft_strcmp("export", cmd_tab[0]))
-		return (main_export(ac, cmd_tab, env));
+		return (env->exstatus = main_export(ac, cmd_tab, env));
 	if (!ft_strcmp("pwd", cmd_tab[0]))
-		return (main_pwd(ac, cmd_tab));
+		return (env->exstatus = main_pwd(ac, cmd_tab));
 	if (!ft_strcmp("unset", cmd_tab[0]))
-		return (main_unset(ac, cmd_tab, env));
+		return (env->exstatus = main_unset(ac, cmd_tab, env));
 	return (0);
-}
-
-void	check_tab(char **tab)
-{
-	int	i;
-	int	k;
-	char	*tmp;
-
-	i = 0;
-	while (tab[i])
-	{
-		if (!strcmp("<", tab[i]) || !strncmp(">>", tab[i], 2) || !strncmp(">", tab[i], 1))
-		{
-			tmp = tab[i];
-			tab[i] = tab[i - 1];
-			tab[i - 1] = tmp;
-		}
-		i++;
-	}
-	i = 0;
-	while (tab[i])
-	{
-		if (tab[i + 1] && (tab[i + 1][0] == '~' || !ft_strcmp("<", tab[i + 1]) || !ft_strcmp(">", tab[i + 1]) || !ft_strncmp(tab[i + 1], ">>", 2) || !ft_strncmp(tab[i + 1], "<<", 2)))
-		{
-			if (!ft_strcmp("<", tab[i + 1]) || !ft_strcmp(">", tab[i + 1])  || !ft_strncmp(tab[i + 1], ">>", 2) || !ft_strncmp(tab[i + 1], "<<", 2))
-			{
-				tab[i] = ft_strjoin(tab[i], " ");
-				tab[i] = ft_strjoin(tab[i], tab[i + 1]);
-				tab[i] = ft_strjoin(tab[i], " ");
-				tab[i] = ft_strjoin(tab[i], tab[i + 2]);
-			}
-			else
-			{
-				tab[i] = ft_strjoin(tab[i], " ");
-				tab[i] = ft_strjoin(tab[i], tab[i + 1] + 1);
-			}
-		}
-		if (tab[i + 1] && (!ft_strcmp("<", tab[i + 1]) || !ft_strcmp(">", tab[i + 1])  || !ft_strcmp(tab[i + 1], ">>") || !ft_strcmp(tab[i + 1], "<<")))
-		{
-			k = i + 1;
-
-			while (tab[k])
-			{
-				tab[k] = tab[k + 1];
-				k++;
-			}
-			k = i + 1;
-			while (tab[k])
-			{
-				tab[k] = tab[k + 1];
-				k++;
-			}
-			i--;
-		}
-		if ((tab[i + 1] && tab[i + 1][0] == '~'))
-		{
-			k = i + 1;
-			i--;
-			while (tab[k])
-			{
-				tab[k] = tab[k + 1];
-				k++;
-			}
-		}
-		i++;
-	}
 }
 
 int	exec_simple_cmd(t_tree *tree, t_envb *env)
