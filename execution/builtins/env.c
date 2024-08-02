@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:12:21 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/30 01:42:15 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/07/31 01:37:08 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	ft_env(t_envb *env)
 			j++;
 		if (env->env[j])
 		{
+			if (!check_export(env->env[j]))
+				break;
 			i = 0;
 			while (env->env[j][i])
 			{
@@ -43,16 +45,6 @@ void	ft_env(t_envb *env)
 
 int	main_env(int ac, char **av, t_envb *env)
 {
-	if (env->i)
-	{
-		if (ft_strlen(env->oldpwd) > 6)
-			printf("%s\n", env->oldpwd);
-		if (env->pwd)
-			printf("PWD=%s\n", env->pwd);
-		if (env->shlvl)
-			printf("SHLVL=%d\n", env->shlvl);
-		return (127);
-	}
 	if (ac == 1 && !ft_strncmp(av[0], "env", 3))
 		return (ft_env(env), 0);
 	if (ac != 1)

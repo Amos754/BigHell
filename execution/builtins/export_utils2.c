@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 01:09:22 by marechaloli       #+#    #+#             */
-/*   Updated: 2024/07/25 00:55:27 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/07/31 01:47:03 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,12 @@ void	check_export_utils(t_envb *env, char **tmp)
 	if (check_stupid(tmp[1], '"'))
 		printf("declare -x %s=%s\n", tmp[0], tmp2[0]);
 	else
-		printf("declare -x %s=\"%s\"\n", tmp[0], tmp2[0]);
+	{
+		if (!tmp[1])
+			printf("declare -x %s=\"\"\n", tmp[0]);
+		else
+			printf("declare -x %s=\"%s\"\n", tmp[0], tmp2[0]);
+	}
 	freetab(tmp);
 	freetab(tmp2);
 }
@@ -36,6 +41,8 @@ int	check_stupid(char *tmp, char stupid)
 	int	i;
 
 	i = 0;
+	if (!tmp)
+		return (0);
 	while (tmp[i])
 	{
 		if (tmp[i] == stupid)

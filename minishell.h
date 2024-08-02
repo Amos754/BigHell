@@ -157,7 +157,6 @@ typedef struct s_envb
 	char	*oldpwd;
 	char	**env;
 	char	*usr;
-	int		i;
 }	t_envb;
 
 //Lexical!
@@ -308,7 +307,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strnstr(const char *s1, const char *s2, size_t len);
 int	cd_error(char **av, int nbr);
 char	*get_pwd(char *buff);
-void	new_env2(t_envb *env, t_envb *export, int j, char *str);
+int	new_env2(t_envb *env, int j, char *str);
 t_envb	*new_export(t_envb *export, char *str);
 void	check_export_utils(t_envb *env, char **tmp);
 int	check_stupid(char *tmp, char stupid);

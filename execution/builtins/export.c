@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:14:16 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/30 01:53:44 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/07/31 02:29:46 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,10 @@ void	print_export(t_envb *env, int ac)
 		print_all(env, ac);
 }
 
-int	main_export_utils(t_envb *env, t_envb *export, char **av)
+int	main_export_utils(t_envb *env, char **av)
 {
 	int	i;
 	int	j;
-	int	export_value;
 	int	return_value;
 	int	option;
 
@@ -67,19 +66,14 @@ int	main_export_utils(t_envb *env, t_envb *export, char **av)
 	{
 		option = 0;
 		return_value += check_args(av[i]);
-		export_value = check_export(av[i]);
-		j = 0;
-		while (env->env[j])
+		j = -1;
+		while (env->env[++j])
 		{
 			if (!ft_strncmp(env->env[j], av[i], check_export(env->env[j])))
-			{
-				option = 1;
-				if (export_value > 0)
-					new_env2(env, export, j, av[i]);
-			}
-			j++;
+				if (check_export(av[i]))
+					option = new_env2(env, j, av[i]);
 		}
-		if (!option)
+		if (option == 0)
 		{
 			env->env[j + 1] = NULL;
 			env->env[j] = av[i];
@@ -90,18 +84,12 @@ int	main_export_utils(t_envb *env, t_envb *export, char **av)
 
 int	main_export(int ac, char **av, t_envb *env)
 {
-	t_envb	*export;
 	int		return_value;
 	int	tmp;
-	if (ac == 1 || ac == 0)
-	{
+	if (ac == 1)
 		print_export(env, ac);
-	}
 	else
-	{
-		return_value = main_export_utils(env, export, av);
-		// main_export(0, NULL, env);
-	}
+		return_value = main_export_utils(env, av);
 	if (return_value > 0)
 		return_value = 1;
 	return (return_value);
