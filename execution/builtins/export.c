@@ -12,25 +12,33 @@
 
 #include "../../minishell.h"
 
-void	print_all(t_envb *env, int ac)
+void print_all(t_envb *env)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
+	int	size;
+	char **envtmp;
 
-	i = 0;
-	while (i < env_size(env->env))
+	size = env_size(env->env);
+	envtmp = malloc((size + 1) * sizeof(char *));
+	i = -1;
+	while (++i < size)
 	{
-		j = i + 1;
-		while (j < env_size(env->env))
-		{
-			if (ft_comp(env->env[i], env->env[j]) > 0)
-				ft_swap(&env->env[i], &env->env[j]);
-			j++;
-		}
-		i++;
+		envtmp[i] = ft_strdup(env->env[i]);
+		if (!envtmp[i])
+			return (free_tab(envtmp));
 	}
-	if (ac == 1)
-		print_all_utils(env);
+	envtmp[size] = NULL;
+	i = -1;
+	while (++i < env_size(envtmp))
+	{
+		j = i;
+		while (++j < env_size(envtmp))
+			if (ft_comp(envtmp[i], envtmp[j]) > 0)
+				ft_swap(&envtmp[i], &envtmp[j]);
+	}
+	print_all_utils(envtmp);
+	free_tab(envtmp);
 }
 
 void	print_3(t_envb *env)
@@ -43,7 +51,7 @@ void	print_3(t_envb *env)
 		printf("declare -x SHLVL=\"%d\"\n", env->shlvl);
 }
 
-void	print_export(t_envb *env, int ac)
+void	print_export(t_envb *env)
 {
 	int	i;
 
@@ -51,7 +59,7 @@ void	print_export(t_envb *env, int ac)
 	if (!env->env)
 		print_3(env);
 	else
-		print_all(env, ac);
+		print_all(env);
 }
 
 int	main_export_utils(t_envb *env, char **av)
@@ -87,7 +95,7 @@ int	main_export(int ac, char **av, t_envb *env)
 	int		return_value;
 	int	tmp;
 	if (ac == 1)
-		print_export(env, ac);
+		print_export(env);
 	else
 		return_value = main_export_utils(env, av);
 	if (return_value > 0)

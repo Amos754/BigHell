@@ -79,14 +79,14 @@ void	check_tab(char **tab)
 	}
 }
 
-char	**init_simple_cmd(t_tree *tree, char **cmd_tab)
+char	**init_simple_cmd(t_tree *tree, char **cmd_tab, t_envb *env)
 {
 	if (!tree || !cmd_tab)
 		return (cmd_tab);
-	cmd_tab = init_simple_cmd(tree->left, cmd_tab);
-	cmd_tab = init_simple_cmd(tree->right, cmd_tab);
+	cmd_tab = init_simple_cmd(tree->left, cmd_tab, env);
+	cmd_tab = init_simple_cmd(tree->right, cmd_tab, env);
 	if (tree->type == A_CMD || tree->type == A_PARAM)
-		cmd_tab = add_in_tab(cmd_tab, tree->data);
+		cmd_tab = add_in_tab(cmd_tab, tree->data, env);
 	return (cmd_tab);
 }
 

@@ -40,7 +40,7 @@ int	main(int ac, char **av, char **envp)
 	int	i;
 	int	fd[2];
 	char	*pt_path;
-	
+
 	if (!(envp[0]))
 		exit (1);
 	else
@@ -48,7 +48,15 @@ int	main(int ac, char **av, char **envp)
 	pt_path = ft_strjoin(new_bison(), BISON_AUTOMATON);
 	while (1)
 	{
+		signal_handlers();
 		inp = readline("\033[1;35mSUPRAHELL \e[0m");
+		if (!inp)
+		{
+			rl_on_new_line();
+			rl_redisplay();
+			printf("exit\n");
+			exit(0);
+		}
 		fd[0] = dup(0);
 		fd[1] = dup(1);
 		add_history((char *)inp);
@@ -62,4 +70,5 @@ int	main(int ac, char **av, char **envp)
 		fd[0] = dup2(fd[0], 0);
 		fd[1] = dup2(fd[1], 1);
 	}
+	reset_signal_handlers();
 }

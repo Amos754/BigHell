@@ -46,7 +46,7 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-char	**add_in_tab(char **cmd_tab, char *str_to_add)
+char	**add_in_tab(char **cmd_tab, char *str_to_add, t_envb *env)
 {
 	char	**tmp_tab;
 	int		i;

@@ -22,28 +22,6 @@ int	env_uti(char *str)
 	return (size);
 }
 
-void	dollar_ech(char *str, t_envb *env)
-{
-	int	i;
-
-	i = 0;
-	if (!ft_strncmp(str, "?", 1))
-	{
-		printf("%d", env->exstatus);
-		return ;
-	}
-	while (env->env[i])
-	{
-		if (!ft_strncmp(env->env[i], str, env_uti(env->env[i])))
-		{
-			printf("%s", env->env[i] + ft_strlen(str) + 1);
-			return ;
-		}
-		i++;
-	}
-	return ;
-}
-
 int	ft_echo(char **av, int nbr, t_envb *env)
 {
 	char	*str;
@@ -52,13 +30,10 @@ int	ft_echo(char **av, int nbr, t_envb *env)
 	if (nbr == 0)
 		i = 1;
 	else
-		i = 2;
+		i = nbr;
 	while (av[i])
 	{
-		if (!ft_strncmp(av[i], "$", 1))
-			dollar_ech(av[i] + 1, env);
-		else
-			printf("%s", av[i]);
+		printf("%s", av[i]);
 		if (av[i + 1])
 			printf(" ");
 		i++;
@@ -71,13 +46,32 @@ int	ft_echo(char **av, int nbr, t_envb *env)
 int	main_echo(int ac, char **av, t_envb *env)
 {
 	int	nbr;
+	int	i;
+	int	j;
+	int	minus;
 
+	i = 1;
 	nbr = 0;
+	minus = 0;
 	if (ac > 1 && !ft_strncmp(av[0], "echo", 4))
 	{
 		if (!ft_strncmp(av[1], "-n", 2))
 		{
-			nbr = 1;
+			while (av[i] && !ft_strncmp(av[i], "-n", 2))
+			{
+				j = 1;
+				while (av[i][++j])
+				{
+					if (av[i][j] != 'n')
+					{
+						minus++;
+						break ;
+					}
+				}
+
+				i++;
+			}
+			nbr = i - minus;
 			if (!av[2])
 				return (0);
 		}

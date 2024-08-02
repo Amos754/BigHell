@@ -41,3 +41,35 @@ char	*get_pwd(char *buff)
 	buff = getcwd(buff, 1024);
 	return (buff);
 }
+
+int	go_home2(char **envp, t_envb *env)
+{
+	int		i;
+	char	buff[1024];
+
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strnstr(envp[i], "HOME=", 5))
+		{
+			if (chdir(envp[i] + 5) == -1)
+			{
+				write(2, "minishell: cd: ", 16);
+				perror(envp[i] + 5);
+				return (3);
+			}
+			return (0);
+		}
+		i++;
+	}
+	return (2);
+}
+
+int	trash(t_envb *env)
+{
+	write(2, "cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 108);
+	change_old_pwd(env, env->pwd);
+	change_pwd(env, 1);
+	go_home2(env->env, env);
+	return (0);
+}

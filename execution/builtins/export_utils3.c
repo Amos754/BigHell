@@ -12,17 +12,17 @@
 
 #include "../../minishell.h"
 
-void	print_all_utils(t_envb *env)
+void	print_all_utils(char **env)
 {
 	int		i;
 	char	**tmp;
 
 	i = -1;
-	while (++i < env_size(env->env))
+	while (++i < env_size(env))
 	{
-		if (check_export(env->env[i]) > 0)
+		if (check_export(env[i]) > 0)
 		{
-			tmp = ft_split(env->env[i], '=');
+			tmp = ft_split(env[i], '=');
 			if (check_stupid(tmp[1], '\n'))
 				check_export_utils(env, tmp);
 			else
@@ -37,6 +37,22 @@ void	print_all_utils(t_envb *env)
 			}
 		}
 		else
-			printf("declare -x %s\n", env->env[i]);
+			printf("declare -x %s\n", env[i]);
 	}
+}
+
+char	*dollar_parse(char *str, t_envb *env)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_strncmp(str, "?", 1))
+		return (ft_itoa(env->exstatus));
+	while (env->env[i])
+	{
+		if (!ft_strncmp(env->env[i], str, env_uti(env->env[i])))
+			return (env->env[i] + ft_strlen(str) + 1);
+		i++;
+	}
+	return (NULL);
 }

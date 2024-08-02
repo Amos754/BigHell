@@ -18,7 +18,7 @@ t_envb	*new_export(t_envb *export, char *str)
 	return (export);
 }
 
-void	check_export_utils(t_envb *env, char **tmp)
+void	check_export_utils(char **env, char **tmp)
 {
 	char	**tmp2;
 

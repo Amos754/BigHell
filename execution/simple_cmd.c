@@ -12,25 +12,40 @@
 
 #include "../minishell.h"
 
-char	**init_pipe_cmd(t_tree *tree, char **cmd_tab)
+char	**init_pipe_cmd(t_tree *tree, char **cmd_tab, t_envb *env)
 {
 	if (!tree || !cmd_tab)
 		return (cmd_tab);
-	cmd_tab = init_pipe_cmd(tree->left, cmd_tab);
-	cmd_tab = init_pipe_cmd(tree->right, cmd_tab);
+	cmd_tab = init_pipe_cmd(tree->left, cmd_tab, env);
+	cmd_tab = init_pipe_cmd(tree->right, cmd_tab, env);
 	if (tree->type == A_CMD || tree->type == A_PARAM || tree->type == A_FILE)
 	{
 		if (tree->type == A_PARAM)
 			tree->data = ft_strjoin("~", tree->data);
-		cmd_tab = add_in_tab(cmd_tab, tree->data);
+		cmd_tab = add_in_tab(cmd_tab, tree->data, env);
 	}
 	if (tree->reduc == R_IO_HERE || tree->reduc == R_IO_FILE)
 	{
-		cmd_tab = add_in_tab(cmd_tab, tree->left->data);
+		cmd_tab = add_in_tab(cmd_tab, tree->left->data, env);
 		if (tree->reduc == R_IO_HERE)
-			cmd_tab = add_in_tab(cmd_tab, tree->right->right->data);
+			cmd_tab = add_in_tab(cmd_tab, tree->right->right->data, env);
 	}
 	return (cmd_tab);
+}
+
+void	error_handle(char **cmd_tab, int option)
+{
+	if (option == 1)
+	{
+		write(2, "minishell: ", ft_strlen("minishell: "));
+		perror(cmd_tab[0]);
+	}
+	else
+	{
+		write(2, "minishell: ", ft_strlen("minishell: "));
+		write(2, cmd_tab[0], ft_strlen(cmd_tab[0]));
+		write(2, ": command not found\n", ft_strlen(": command not found\n"));
+	}
 }
 
 int	executor(char **cmd_tab, t_envb *env)
@@ -41,9 +56,8 @@ int	executor(char **cmd_tab, t_envb *env)
 
 	paths = get_paths(env->env);
 	bin_cmd = get_cmd(paths, cmd_tab[0]);
-	if (!bin_cmd)
-		return (-1);
 	return_value = execve(bin_cmd, cmd_tab, env->env);
+	error_handle(cmd_tab, return_value);
 	if (return_value == -1)
 	{
 		if (errno == EAGAIN)
@@ -104,17 +118,33 @@ int	exec_builtin(char **cmd_tab, t_envb *env)
 	return (0);
 }
 
+char	**check_dollar(char **cmd_tab, t_envb *env)
+{
+	int	i;
+
+	i = 0;
+	while (cmd_tab[i])
+	{
+		if (cmd_tab[i][0] == '$')
+			cmd_tab[i] = dollar_parse(cmd_tab[i] + 1, env);
+		i++;
+	}
+	return (cmd_tab);
+}
+
 int	exec_simple_cmd(t_tree *tree, t_envb *env)
 {
 	char	**cmd_tab;
 
 	if (tree_finder(tree, A_PIPE, 0) > 0)
 	{
-		cmd_tab = init_pipe_cmd(tree, new_tab());
+		cmd_tab = init_pipe_cmd(tree, new_tab(), env);
+		cmd_tab = check_dollar(cmd_tab, env);
 		check_tab(cmd_tab);
 	}
 	else
-		cmd_tab = init_simple_cmd(tree, new_tab());
+		cmd_tab = init_simple_cmd(tree, new_tab(), env);
+	cmd_tab = check_dollar(cmd_tab, env);
 	if (!cmd_tab)
 		return (1);
 	if (*cmd_tab)
