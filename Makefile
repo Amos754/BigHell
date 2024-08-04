@@ -1,7 +1,7 @@
 NAME 		= minishell
 CC 			= gcc
 CFLAGS 		= -g3 -g -fsanitize=address #-Wall -Wextra -Werror
-RDLN_FLAG	= -L/Users/olmarech/.brew/opt/readline/lib -I/Users/olmarech/.brew/opt/readline/include -lreadline
+RDLN_FLAG	= -L/opt/homebrew/opt/readline/lib -I/opt/homebrew/opt/readline/include -lreadline
 
 
 RED			= \033[1;31m
@@ -32,6 +32,7 @@ SRC			= execution/builtins/cd.c	\
 			  execution/utils/utils_simple_cmd.c	\
 			  execution/utils/utils_simple_cmd2.c	\
 			  execution/utils/utils_simple_cmd3.c	\
+			  execution/utils/utils_simple_cmd4.c	\
 			  execution/env_init.c	\
 			  execution/main_executor.c	\
 			  execution/pipe_exec.c	\

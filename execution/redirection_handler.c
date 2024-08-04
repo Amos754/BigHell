@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:47:02 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/08/04 02:54:50 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 22:30:37 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ int	do_redirection(t_tree *ast, int error, t_envb *env)
 		if (ast->left->type == A_DGREAT || ast->left->type == A_RED_FROM
 			|| ast->left->type == A_RED_TO || ast->left->type == A_DLESS)
 			error = redirection_handler(ast, env);
-			if (error == -1)
-			{
-				write(2, "minishell: ", 11);
-				perror(ast->right->right->data);
-				exit_status(28, env);
-			}
+		if (error == -1)
+		{
+			write(2, "minishell: ", 11);
+			perror(ast->right->right->data);
+			exit_status(28, env);
+		}
 	}
 	return (error);
 }

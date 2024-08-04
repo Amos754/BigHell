@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:29:42 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/08/04 02:40:04 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 23:33:53 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	main_pipe(int ac, char **av, t_envb *env)
 
 	return_value = 0;
 	i = 0;
-	if (!creat_pipe(&piped, env->env, av, ac))
+	if (!creat_pipe(&piped, env, av, ac))
 	{
 		printf("Pipe error\n");
 		return (1);

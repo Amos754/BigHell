@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 01:53:23 by marechaloli       #+#    #+#             */
-/*   Updated: 2024/08/04 02:45:38 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 23:12:28 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	add_command(t_piped *piped, char *cmd)
 	}
 }
 
-void	parse_redirections(t_command *cmd_node)
+void	parse_redirections(t_command *cmd_node, t_envb *env)
 {
 	int	i;
 
@@ -86,12 +86,12 @@ void	init_creat(t_piped *piped, char **envp, int num_cmds, char **av)
 	piped->fd = malloc(sizeof(int *) * (num_cmds - 1));
 }
 
-int	creat_pipe(t_piped *piped, char **envp, char **av, int num_cmds)
+int	creat_pipe(t_piped *piped, t_envb *env, char **av, int num_cmds)
 {
 	int			i;
 	t_command	*current;
 
-	init_creat(piped, envp, num_cmds, av);
+	init_creat(piped, env->env, num_cmds, av);
 	i = -1;
 	while (++i < num_cmds - 1)
 	{
@@ -103,13 +103,13 @@ int	creat_pipe(t_piped *piped, char **envp, char **av, int num_cmds)
 	piped->stdin_cpy = dup(0);
 	piped->stdout_cpy = dup(1);
 	i = 0;
-	while (strncmp("PATH=", envp[i], 5))
+	while (strncmp("PATH=", env->env[i], 5))
 		i++;
-	piped->paths = ft_split(envp[i] + 5, ':');
+	piped->paths = ft_split(env->env[i] + 5, ':');
 	current = piped->commands;
 	while (current)
 	{
-		parse_redirections(current);
+		parse_redirections(current, env);
 		current = current->next;
 	}
 	return (1);

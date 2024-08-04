@@ -6,18 +6,18 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:14:16 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/08/04 01:39:22 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 23:47:01 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void print_all(t_envb *env)
+void	print_all(t_envb *env)
 {
-	int	i;
-	int	j;
-	int	size;
-	char **envtmp;
+	int		i;
+	int		j;
+	int		size;
+	char	**envtmp;
 
 	size = env_size(env->env);
 	envtmp = malloc((size + 1) * sizeof(char *));

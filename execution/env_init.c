@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:20:01 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/31 01:37:57 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 22:49:10 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,18 @@ t_envb	*env_init(char **env)
 	int		i;
 	char	*old_pwd;
 
-	if (!env)
-		i = 0;
-	else
-		i = env_size(env);
 	envinit = malloc(sizeof(t_envb));
 	buff = malloc(1024);
 	getcwd(buff, 1024);
 	envinit->exstatus = 0;
-	if (i > 0)
-	{
-		envinit->env = env;
-		envinit->env[env_size(env) - 1] = "_=/usr/bin/env";
-		envinit->env[env_size(env)] = NULL;
-		envinit = change_shlvl(envinit);
-	}
+	envinit->env = env;
+	envinit->env[env_size(env) - 1] = "_=/usr/bin/env";
+	envinit->env[env_size(env)] = NULL;
+	envinit = change_shlvl(envinit);
 	i = 0;
 	while (ft_strncmp(envinit->env[i], "OLDPWD=", 7))
 		i++;
 	envinit->oldpwd = envinit->env[i];
 	envinit->pwd = buff;
-	envinit->usr = "_=/usr/bin/env";
 	return (envinit);
 }

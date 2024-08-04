@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:19:36 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/08/04 02:43:50 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 22:49:56 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static char	**go_to_path(char **envp)
 char	*get_cmd(char **paths, char *cmd)
 {
 	char	*good_cmd;
+
 	if (!paths)
 		return (NULL);
 	while (*paths)

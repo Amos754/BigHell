@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 01:12:59 by marechaloli       #+#    #+#             */
-/*   Updated: 2024/08/04 01:56:39 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 23:41:01 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*check_wave(char *str)
 
 char	*dollar_parse(char *str, t_envb *env)
 {
-	int	i;
+	int		i;
 	char	*tmp;
 
 	tmp = str;
@@ -73,7 +73,8 @@ char	*dollar_parse(char *str, t_envb *env)
 		return (ft_itoa(env->exstatus));
 	while (env->env[i])
 	{
-		if (!ft_strncmp(env->env[i], str, env_uti(env->env[i])) && !ft_strncmp(env->env[i], str, ft_strlen(str)))
+		if (!ft_strncmp(env->env[i], str, env_uti(env->env[i]))
+			&& !ft_strncmp(env->env[i], str, ft_strlen(str)))
 			return (env->env[i] + ft_strlen(str) + 1);
 		i++;
 	}

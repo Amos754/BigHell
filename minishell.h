@@ -21,13 +21,17 @@
 # define BISON_AUTOMATON	"/syntax_analysis/parsing_table"
 
 # define ERROR -1
-
+# define W 0x0001
+# define C 0x00000200
+# define A 0x00000008
+# define T 0x00000400
 typedef struct s_command {
     char **args;
     char *output_file;
     char *input_file;
     char *heredoc_content;  // New field for here-doc content
     int append_output;
+	char	*delimiter;
     struct s_command *next;
 } t_command;
 
@@ -276,9 +280,9 @@ char	**glue_tab(char **tab, int i);
 char	**order_tab(char **tab);
 char	**new_tab(void);
 char	**init_simple_cmd(t_tree *tree, char **cmd_tab, t_envb *env);
-int	creat_pipe(t_piped *piped, char **envp, char **av, int num_cmds);
+int	creat_pipe(t_piped *piped, t_envb *env, char **av, int num_cmds);
 void	init_creat(t_piped *piped, char **envp, int num_cmds, char **av);
-void	parse_redirections(t_command *cmd_node);
+void	parse_redirections(t_command *cmd_node, t_envb *env);
 void	add_command(t_piped *piped, char *cmd);
 t_command	*create_command_node(char *cmd);
 void	adj_exec(t_command *cmd_node, t_piped *piped, char *cmd, int cmd_index);
@@ -291,6 +295,12 @@ void adjust_command_for_tee(t_command *cmd_node);
 int	env_uti(char *str);
 void	error_handle(char **cmd_tab, int option);
 void	free_env(t_envb *env);
+void	hd_handler(char *delimiter, t_tree *ast, t_envb *env);
+char	**check_dollar(char **cmd_tab, t_envb *env);
+char	*check_path_dollar(char *str, t_envb *env);
+int	info_path(char *str);
+void	error_handle(char **cmd_tab, int option);
+int	open_files(t_command *cmd_node);
 /*BUILTINS*/
 int	exec_builtin(char **cmd_tab, t_envb *env);
 t_envb	*env_init(char **env);

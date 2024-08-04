@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 01:05:26 by marechaloli       #+#    #+#             */
-/*   Updated: 2024/07/29 00:54:48 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 23:42:48 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ int	go_home2(char **envp, t_envb *env)
 
 int	trash(t_envb *env)
 {
-	write(2, "cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 108);
+	write(2, "cd: error retrieving current directory: ", 41);
+	write(2, "getcwd: cannot access parent directories: ", 43);
+	write(2, "No such file or directory\n", 27);
 	change_old_pwd(env, env->pwd);
 	change_pwd(env, 1);
 	go_home2(env->env, env);

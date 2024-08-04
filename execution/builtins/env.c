@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:12:21 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/31 01:37:08 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 23:46:35 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,16 @@ void	ft_env(t_envb *env)
 	int	j;
 	int	env_line;
 
-	if (!env->env)
-		return ;
-	j = 0;
-	while (j < env_size(env->env))
+	j = -1;
+	while (++j < env_size(env->env))
 	{
-		if (!ft_strncmp(env->env[j], "_=/usr/bin/env", ft_strlen("_=/usr/bin/env")))
+		if (!ft_strncmp(env->env[j], "_=/usr/bin/env",
+				ft_strlen("_=/usr/bin/env")))
 			j++;
 		if (env->env[j])
 		{
 			if (!check_export(env->env[j]))
-				break;
+				break ;
 			i = 0;
 			while (env->env[j][i])
 			{
@@ -38,7 +37,6 @@ void	ft_env(t_envb *env)
 				i++;
 			}
 		}
-		j++;
 	}
 	printf("_=/usr/bin/env\n");
 }
