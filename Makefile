@@ -1,12 +1,16 @@
 NAME 		= minishell
 CC 			= gcc
 CFLAGS 		= -g3 -g -fsanitize=address #-Wall -Wextra -Werror
-RDLN_FLAG	= -L/Users/$(whoami)/.brew/opt/readline/lib -I/Users/$(whoami)/.brew/opt/readline/include -lreadline
-# MLXFLAGS	= -L ./minilibx -lmlx -framework OpenGl -framework Appkit
+RDLN_FLAG	= -L/Users/olmarech/.brew/opt/readline/lib -I/Users/olmarech/.brew/opt/readline/include -lreadline
+
 
 RED			= \033[1;31m
 BLUE		= \033[1;34m
+PURPLE		= \033[0;95m
+GREEN		= \033[0;32m
 RESET		= \033[0m
+CYAN		= \033[0;96m
+YELLOW		= \033[0;93m
 
 SRC			= execution/builtins/cd.c	\
 			  execution/builtins/cd_utils.c	\
@@ -56,19 +60,24 @@ SRC			= execution/builtins/cd.c	\
 
 OBJ = $(SRC:.c=.o)
 
+%.o: %.c
+	@echo "$(YELLOW)Generating minishell objects$(RESET)"
+	@${CC} ${CFLAGS} -c $< -o $@
+
+
 all: cute ${NAME}
 
 ${NAME}: $(OBJ)
-		@echo "$(BLUE)███████████████████████ Making minishell ███████████████████████$(RESET)"
-		$(CC) $(CFLAGS) $(RDLN_FLAG) -lm $(SRC) -o $(NAME)
-		@echo "$(BLUE)███████████████████████ Compiling is DONE ██████████████████████$(RESET)"
+		@echo "$(CYAN)███████████████████████$(PURPLE) Making minishell $(CYAN)███████████████████████$(RESET)"
+		@$(CC) $(CFLAGS) $(RDLN_FLAG) -lm $(SRC) -o $(NAME)
+		@echo "$(CYAN)███████████████████████$(GREEN) Compiling is DONE $(CYAN)██████████████████████$(RESET)"
 
 clean:
-		@echo "$(RED)deleting object files$(RESET)
+		@echo "$(RED)deleting$(RESET) object files"
 		@rm -rf $(OBJ)
 
 fclean: clean
-		@echo "$(RED)deleting MINIHELL$(RESET)
+		@echo "$(RED)deleting$(RESET) MINIHELL"
 		@rm -rf $(NAME) $(OBJ)
 
 re: fclean all
@@ -76,10 +85,10 @@ re: fclean all
 .PHONY: all clean fclean re
 
 cute:
-	@echo "███╗   ███╗██╗███╗   ██╗██╗   ██╗  ██╗███████╗██╗     ██╗     "
-	@echo "████╗ ████║██║████╗  ██║██║   ██║  ██║██╔════╝██║     ██║     "
-	@echo "██╔████╔██║██║██╔██╗ ██║██║   ███████║█████╗  ██║     ██║     "
-	@echo "██║╚██╔╝██║██║██║╚██╗██║██║   ██╔══██║██╔══╝  ██║     ██║     "
-	@echo "██║ ╚═╝ ██║██║██║ ╚████║██║   ██║  ██║███████╗███████╗███████╗"
-	@echo "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝"
+	@echo "███╗   ███╗██╗███╗   ██╗██╗   $(RED)██╗  ██╗███████╗██╗     ██╗     $(RESET)"
+	@echo "████╗ ████║██║████╗  ██║██║   $(RED)██║  ██║██╔════╝██║     ██║     $(RESET)"
+	@echo "██╔████╔██║██║██╔██╗ ██║██║   $(RED)███████║█████╗  ██║     ██║     $(RESET)"
+	@echo "██║╚██╔╝██║██║██║╚██╗██║██║   $(RED)██╔══██║██╔══╝  ██║     ██║     $(RESET)"
+	@echo "██║ ╚═╝ ██║██║██║ ╚████║██║   $(RED)██║  ██║███████╗███████╗███████╗$(RESET)"
+	@echo "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   $(RED)╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝$(RESET)"
 	@echo "         Made by : \033[1;91mabolor-e\033[m and \033[1;91molmarech\033[m"
