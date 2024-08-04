@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abolor-e <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:47:02 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/17 15:47:36 by abolor-e         ###   ########.fr       */
+/*   Updated: 2024/08/04 02:54:50 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	hd_handler(char *delimiter, t_tree *ast)
+void	hd_handler(char *delimiter, t_tree *ast, t_envb *env)
 {
 	int		hd_pipe[2];
 	char	*line;
 	int		nbhd;
 
+	delimiter = dollar_parse(delimiter + 1, env);
 	line = readline("heredoc> ");
 	while (1)
 	{
@@ -29,7 +30,7 @@ void	hd_handler(char *delimiter, t_tree *ast)
 	free(line);
 }
 
-int	red_manager(t_tree *ast, int order)
+int	red_manager(t_tree *ast, int order, t_envb *env)
 {
 	int	fd;
 
@@ -40,7 +41,7 @@ int	red_manager(t_tree *ast, int order)
 	else if (order == 3)
 		fd = open(ast->right->right->data, O_RDONLY);
 	else if (order == 4)
-		hd_handler((char *)ast->right->right->data, ast);
+		hd_handler((char *)ast->right->right->data, ast, env);
 	if (fd == -1)
 		return (-1);
 	if (order == 1 || order == 2)
@@ -52,32 +53,32 @@ int	red_manager(t_tree *ast, int order)
 	return (0);
 }
 
-int	redirection_handler(t_tree *ast)
+int	redirection_handler(t_tree *ast, t_envb *env)
 {
 	if (ast->left->type == A_DGREAT)
-		return (red_manager(ast, 1));
+		return (red_manager(ast, 1, env));
 	if (ast->left->type == A_RED_TO)
-		return (red_manager(ast, 2));
+		return (red_manager(ast, 2, env));
 	if (ast->left->type == A_RED_FROM)
-		return (red_manager(ast, 3));
+		return (red_manager(ast, 3, env));
 	if (ast->left->type == A_DLESS)
-		return (red_manager(ast, 4));
+		return (red_manager(ast, 4, env));
 	return (0);
 }
 
-int	do_redirection(t_tree *ast, int error)
+int	do_redirection(t_tree *ast, int error, t_envb *env)
 {
 	if (!ast || (ast && ast->type == A_PIPE))
 		return (error);
-	error = do_redirection(ast->left, error);
-	error = do_redirection(ast->right, error);
+	error = do_redirection(ast->left, error, env);
+	error = do_redirection(ast->right, error, env);
 	if (error == -1)
 		return (error);
 	if (ast->reduc == R_IO_FILE || ast->reduc == R_IO_HERE)
 	{
 		if (ast->left->type == A_DGREAT || ast->left->type == A_RED_FROM
 			|| ast->left->type == A_RED_TO || ast->left->type == A_DLESS)
-			error = redirection_handler(ast);
+			error = redirection_handler(ast, env);
 	}
 	return (error);
 }

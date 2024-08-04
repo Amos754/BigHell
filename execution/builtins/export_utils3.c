@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 01:12:59 by marechaloli       #+#    #+#             */
-/*   Updated: 2024/07/31 01:53:58 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 01:56:39 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,13 @@ char	*dollar_parse(char *str, t_envb *env)
 	int	i;
 
 	i = 0;
+	if (ft_strlen(str) == 0)
+		return ("$");
 	if (!ft_strncmp(str, "?", 1))
 		return (ft_itoa(env->exstatus));
 	while (env->env[i])
 	{
-		if (!ft_strncmp(env->env[i], str, env_uti(env->env[i])))
+		if (!ft_strncmp(env->env[i], str, env_uti(env->env[i])) && !ft_strncmp(env->env[i], str, ft_strlen(str)))
 			return (env->env[i] + ft_strlen(str) + 1);
 		i++;
 	}

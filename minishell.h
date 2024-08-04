@@ -267,7 +267,7 @@ int	is_builtin(char *cmd);
 char	**get_paths(char **envp);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*get_cmd(char **paths, char *cmd);
-int	do_redirection(t_tree *ast, int error);
+int	do_redirection(t_tree *ast, int error, t_envb *env);
 int main_pipe(int ac, char **av, t_envb *env);
 char	**last_touch(char **tab, int i);
 char	**last_touch2(char **tab, int i);
@@ -289,6 +289,7 @@ void	red_dealer(char *cmd, t_command *cmd_node, t_piped *piped);
 int	exit_status(int status, t_envb *env);
 void adjust_command_for_tee(t_command *cmd_node);
 int	env_uti(char *str);
+void	error_handle(char **cmd_tab, int option);
 /*BUILTINS*/
 int	exec_builtin(char **cmd_tab, t_envb *env);
 t_envb	*env_init(char **env);

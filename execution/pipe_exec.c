@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olmarech <olmarech@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:29:42 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/30 14:59:15 by olmarech         ###   ########.fr       */
+/*   Updated: 2024/08/04 02:40:04 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	red_dealer(char *cmd, t_command *cmd_node, t_piped *piped)
 	}
 }
 
-void	execute_command(t_piped *piped, int cmd_index, t_envb *env)
+int	execute_command(t_piped *piped, int cmd_index, t_envb *env)
 {
 	t_command	*cmd_node;
 	pid_t		pid;
@@ -66,24 +66,22 @@ void	execute_command(t_piped *piped, int cmd_index, t_envb *env)
 	while (++i < cmd_index)
 		cmd_node = cmd_node->next;
 	cmd = get_cmd_pipe(piped, cmd_node->args[0]);
-	if (!cmd)
-	{
-		perror("Command not found");
-		exit(1);
-	}
 	adj_exec(cmd_node, piped, cmd, cmd_index);
 	close_pipe(piped);
 	if (!is_builtin(cmd_node->args[0]))
 	{
-		exec_builtin(cmd_node->args, env);
+		if (!ft_strcmp(cmd_node->args[0], "exit"))
+			exit (0);
+		else
+			exec_builtin(cmd_node->args, env);
 		exit(0);
 	}
-	execve(cmd, cmd_node->args, piped->env);
-	perror("execve failed");
-	exit(1);
+	i = execve(cmd, cmd_node->args, piped->env);
+	error_handle(cmd_node->args, i);
+	exit (127);
 }
 
-int	end_process(t_piped *piped, t_envb *env)
+int	end_process(t_piped *piped, t_envb *env, int return_value)
 {
 	int	status;
 	int	i;
@@ -112,7 +110,9 @@ int	main_pipe(int ac, char **av, t_envb *env)
 {
 	t_piped	piped;
 	int		i;
+	int		return_value;
 
+	return_value = 0;
 	i = 0;
 	if (!creat_pipe(&piped, env->env, av, ac))
 	{
@@ -123,8 +123,8 @@ int	main_pipe(int ac, char **av, t_envb *env)
 	{
 		piped.pid[i] = fork();
 		if (piped.pid[i] == 0)
-			execute_command(&piped, i, env);
+			return_value = execute_command(&piped, i, env);
 		i++;
 	}
-	return (end_process(&piped, env));
+	return (end_process(&piped, env, return_value));
 }

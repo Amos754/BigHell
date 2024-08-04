@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:15:01 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/31 02:30:31 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 01:38:57 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_swap(char **a, char **b)
 int	check_args(char *av)
 {
 	if (!av)
-		return (1);
+		return (0);
 	if (!(av[0] >= 'a' && av[0] <= 'z')
 		&& !(av[0] >= 'A' && av[0] <= 'Z') && av[0] != '_')
 	{

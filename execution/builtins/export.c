@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:14:16 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/31 02:29:46 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 01:39:22 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	main_export_utils(t_envb *env, char **av)
 	int	option;
 
 	i = 0;
+	return_value = 0;
 	while (av[i++])
 	{
 		option = 0;
@@ -93,7 +94,8 @@ int	main_export_utils(t_envb *env, char **av)
 int	main_export(int ac, char **av, t_envb *env)
 {
 	int		return_value;
-	int	tmp;
+	int		tmp;
+
 	if (ac == 1)
 		print_export(env);
 	else

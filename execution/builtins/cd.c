@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:11:38 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/29 00:51:21 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 01:21:24 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int	go_home(char **envp, t_envb *env)
 	{
 		if (ft_strnstr(envp[i], "HOME=", 5))
 		{
+			if (ft_strlen(envp[i]) == 5)
+				return (0);
 			if (chdir(envp[i] + 5) == -1)
 			{
 				write(2, "minishell: cd: ", 16);
@@ -106,7 +108,7 @@ int	main_cd(int ac, char **av, t_envb *env)
 	buff2 = NULL;
 	buff2 = get_pwd(buff2);
 	if (!buff2 && ft_strcmp("..", av[0]))
-		return(trash(env));
+		return (trash(env));
 	if (ac == 1)
 	{
 		change_old_pwd(env, buff2);

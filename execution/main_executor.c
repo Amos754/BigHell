@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:20:39 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/29 00:44:40 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 02:51:38 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ast_executor(t_tree *tree, t_envb *env)
 	pipe_counter = tree_finder(tree, A_PIPE, 0);
 	if (pipe_counter > 0)
 		return (exec_simple_cmd(tree, env));
-	if (!do_redirection(tree, 0))
+	if (!do_redirection(tree, 0, env))
 		return (exec_simple_cmd(tree, env));
 	return (0);
 }

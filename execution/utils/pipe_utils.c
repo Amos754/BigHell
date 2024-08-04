@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 01:53:23 by marechaloli       #+#    #+#             */
-/*   Updated: 2024/07/28 23:11:46 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 02:45:38 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,12 @@ void	init_creat(t_piped *piped, char **envp, int num_cmds, char **av)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	piped->num_cmds = num_cmds;
 	piped->env = envp;
 	piped->commands = NULL;
-	while (i < num_cmds)
-		add_command(piped, av[i++]);
+	while (++i < num_cmds)
+		add_command(piped, av[i]);
 	piped->fd = malloc(sizeof(int *) * (num_cmds - 1));
 }
 

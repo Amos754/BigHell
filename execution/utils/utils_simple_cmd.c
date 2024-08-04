@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:18:00 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/24 01:15:00 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 01:47:12 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	free_tab(char **tab)
 	i = 0;
 	if (!tab)
 		return ;
-	while (tab[i])
-		free(tab[i++]);
+	while (tab[i++])
+		free(tab[i]);
 	free(tab);
 }
 

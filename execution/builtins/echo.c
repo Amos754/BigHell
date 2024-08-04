@@ -6,7 +6,7 @@
 /*   By: marechalolivier <marechalolivier@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 15:12:06 by abolor-e          #+#    #+#             */
-/*   Updated: 2024/07/27 01:59:05 by marechaloli      ###   ########.fr       */
+/*   Updated: 2024/08/04 01:58:06 by marechaloli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,5 @@ int	main_echo(int ac, char **av, t_envb *env)
 	}
 	else
 		printf("\n");
-	return (127);
+	return (0);
 }
