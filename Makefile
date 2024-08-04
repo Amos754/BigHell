@@ -1,7 +1,7 @@
 NAME 		= minishell
 CC 			= gcc
 CFLAGS 		= -g3 -g -fsanitize=address #-Wall -Wextra -Werror
-RDLN_FLAG	= -L/opt/homebrew/opt/readline/lib -I/opt/homebrew/opt/readline/include -lreadline
+RDLN_FLAG	= -L/Users/olmarech/.brew/opt/readline/lib -I/Users/olmarech/.brew/opt/readline/include -lreadline
 
 
 RED			= \033[1;31m
