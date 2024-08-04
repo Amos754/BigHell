@@ -18,7 +18,8 @@ void	hd_handler(char *delimiter, t_tree *ast, t_envb *env)
 	char	*line;
 	int		nbhd;
 
-	delimiter = dollar_parse(delimiter + 1, env);
+	if (delimiter[0] == '$')
+		delimiter = dollar_parse(delimiter + 1, env);
 	line = readline("heredoc> ");
 	while (1)
 	{
@@ -79,6 +80,12 @@ int	do_redirection(t_tree *ast, int error, t_envb *env)
 		if (ast->left->type == A_DGREAT || ast->left->type == A_RED_FROM
 			|| ast->left->type == A_RED_TO || ast->left->type == A_DLESS)
 			error = redirection_handler(ast, env);
+			if (error == -1)
+			{
+				write(2, "minishell: ", 11);
+				perror(ast->right->right->data);
+				exit_status(28, env);
+			}
 	}
 	return (error);
 }

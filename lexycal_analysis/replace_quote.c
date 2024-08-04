@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-t_env	*g_envp = NULL;
+// t_env	*g_envp = NULL;
 
 int	envvar_len(char *str)
 {
@@ -63,17 +63,31 @@ int	replace_var_util(char *str, int length, char *new, int *i_new)
 	while (++i < length)
 		string[i] = str[i];
 	string[i] = 0;
-	newstr = ft_getenv(string);
+	// newstr = ft_getenv(string);
 	free(string);
 	if (newstr)
 		replace_var_2(new, newstr, i_new, length);
 	return (length);
 }
 
+void	change_single_env(t_varcomb *vc)
+{
+	int	i;
+	char	*tmp;
+
+	i = 0;
+	tmp = NULL;
+	if (vc->str[0] == '\'' && vc->str[ft_strlen(vc->str) - 1] == '\'')
+	{
+		tmp = vc->str + 2;
+		vc->str = ft_strjoin("'$~", tmp);
+	}
+}
+
+
 int	replace_var(t_varcomb vc, int index, char *new, int *i_new)
 {
 	int		length;
-	char	*string;
 
 	if (vc.str[index] == '?')
 		return (replace_var_2(new, vc.exit, i_new, 1));
@@ -82,7 +96,7 @@ int	replace_var(t_varcomb vc, int index, char *new, int *i_new)
 		return (0);
 	if (length < 0)
 	{
-		free(string);
+		change_single_env(&vc);
 		return (replace_var_2(new, "$", i_new, 0));
 	}
 	length = replace_var_util(vc.str, length, new, i_new);
@@ -100,6 +114,7 @@ int	check_envvar(t_varcomb vc, char *new, int *i_new, t_varquote i)
 		if (vc.str[i.a] == '$' && vc.str[i.a + 1])
 		{
 			variable_len = replace_var(vc, i.a + 1, new, i_new);
+			change_single_env(&vc);
 			*i_new = (int)ft_strlen(new);
 			i.a = i.a + variable_len + 1;
 		}

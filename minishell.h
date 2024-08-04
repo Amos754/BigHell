@@ -290,13 +290,14 @@ int	exit_status(int status, t_envb *env);
 void adjust_command_for_tee(t_command *cmd_node);
 int	env_uti(char *str);
 void	error_handle(char **cmd_tab, int option);
+void	free_env(t_envb *env);
 /*BUILTINS*/
 int	exec_builtin(char **cmd_tab, t_envb *env);
 t_envb	*env_init(char **env);
 int	env_size(char **env);
 int	main_cd(int ac, char **av, t_envb *env);
 int	main_echo(int ac, char **av, t_envb *env);
-int	main_exit(int ac, char **av);
+int	main_exit(int ac, char **av, t_envb *env);
 char	ft_comp(char *s1, char *s2);
 void	freetab(char **tab);
 void	ft_swap(char **a, char **b);

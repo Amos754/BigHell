@@ -28,6 +28,12 @@ char	*new_bison(void)
 	return (pwd);
 }
 
+void	free_env(t_envb *env)
+{
+	free(env->pwd);
+	free(env);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_token		*input;
@@ -55,6 +61,7 @@ int	main(int ac, char **av, char **envp)
 			rl_on_new_line();
 			rl_redisplay();
 			printf("exit\n");
+			free_env(env);
 			exit(0);
 		}
 		fd[0] = dup(0);
@@ -63,12 +70,11 @@ int	main(int ac, char **av, char **envp)
 		input = ft_lexer(inp);
 		parsingtable = ft_init_parsing_table(pt_path);
 		tree = syntax_analysis(input, parsingtable);
-		if (!tree)
-			printf("Tree is NULL\n");
-		else
+		if (tree)
 			ast_executor(tree, env);
 		fd[0] = dup2(fd[0], 0);
 		fd[1] = dup2(fd[1], 1);
 	}
+	free_env(env);
 	reset_signal_handlers();
 }

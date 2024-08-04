@@ -108,6 +108,9 @@ void	adj_exec(t_command *cmd_node, t_piped *piped, char *cmd, int cmd_index)
 		dup2(fd, 1);
 	}
 	if (cmd_node->input_file || cmd_node->output_file)
+	{
 		close(fd);
+		execve(cmd, cmd_node->args, piped->env);
+	}
 	utils(0, piped, 1, cmd_index);
 }

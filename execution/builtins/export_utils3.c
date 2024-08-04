@@ -41,11 +41,32 @@ void	print_all_utils(char **env)
 	}
 }
 
+char	*check_wave(char *str)
+{
+	char	*tmp;
+
+	if (ft_strlen(str) == 1 && !ft_strcmp("~", str))
+	{
+		return ("$");
+	}
+	if (str[0] == '~')
+	{
+		tmp = str + 1;
+		return (ft_strjoin("$", tmp));
+	}
+	return (str);
+}
+
 char	*dollar_parse(char *str, t_envb *env)
 {
 	int	i;
+	char	*tmp;
 
+	tmp = str;
 	i = 0;
+	str = check_wave(str);
+	if (ft_strcmp(str, tmp))
+		return (str);
 	if (ft_strlen(str) == 0)
 		return ("$");
 	if (!ft_strncmp(str, "?", 1))

@@ -14,6 +14,11 @@
 
 int	exit_status(int status, t_envb *env)
 {
+	if (status == 28)
+	{
+		env->exstatus = 1;
+		return (1);
+	}
 	if (WIFSIGNALED(status))
 	{
 		env->exstatus = 128 + WTERMSIG(status);

@@ -63,16 +63,16 @@ void	init_sdquote(t_sdQuote *q)
 	q->type = 0;
 }
 
-char	*ft_getenv(char *var)
-{
-	t_env	*temp;
+// char	*ft_getenv(char *var)
+// {
+// 	t_env	*temp;
 
-	temp = g_envp;
-	while (temp)
-	{
-		if (!ft_strcmp(var, temp->name))
-			return (temp->content);
-		temp = temp->next;
-	}
-	return (NULL);
-}
+// 	temp = g_envp;
+// 	while (temp)
+// 	{
+// 		if (!ft_strcmp(var, temp->name))
+// 			return (temp->content);
+// 		temp = temp->next;
+// 	}
+// 	return (NULL);
+// }

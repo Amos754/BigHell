@@ -38,11 +38,12 @@ void	free_tab(char **tab)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	if (!tab)
 		return ;
-	while (tab[i++])
-		free(tab[i]);
+	while (tab[++i])
+		if (tab[i])
+			free(tab[i]);
 	free(tab);
 }
 

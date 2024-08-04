@@ -56,6 +56,5 @@ int	main_unset(int ac, char **av, t_envb *env)
 	}
 	if (return_value > 0)
 		return_value = 1;
-	free(env->pwd);
 	return (return_value);
 }

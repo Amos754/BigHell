@@ -12,16 +12,6 @@
 
 #include "../minishell.h"
 
-// int	env_size(char **env)
-// {
-// 	int	size;
-
-// 	size = 0;
-// 	while (env[size] != NULL)
-// 		size++;
-// 	return (size);
-// }
-
 t_envb	*change_shlvl(t_envb	*env)
 {
 	int		i;

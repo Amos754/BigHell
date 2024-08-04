@@ -80,7 +80,7 @@ int	exec_binary(char **cmd_tab, t_envb *env)
 		return (-1);
 	if (pid_fork == 0)
 	{
-		// activate_signal();
+		signal_handlers();
 		child_value = executor(cmd_tab, env);
 		free_tab(cmd_tab);
 		exit(child_value);
@@ -106,7 +106,7 @@ int	exec_builtin(char **cmd_tab, t_envb *env)
 	if (!ft_strcmp("echo", cmd_tab[0]))
 		return (env->exstatus = main_echo(ac, cmd_tab, env));
 	if (!ft_strcmp("exit", cmd_tab[0]))
-		exit(main_exit(ac, cmd_tab));
+		exit(main_exit(ac, cmd_tab, env));
 	if (!ft_strcmp("env", cmd_tab[0]))
 		return (env->exstatus = main_env(ac, cmd_tab, env));
 	if (!ft_strcmp("export", cmd_tab[0]))

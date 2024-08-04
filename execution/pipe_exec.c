@@ -62,6 +62,7 @@ int	execute_command(t_piped *piped, int cmd_index, t_envb *env)
 	int			i;
 
 	i = -1;
+	signal_handlers();
 	cmd_node = piped->commands;
 	while (++i < cmd_index)
 		cmd_node = cmd_node->next;

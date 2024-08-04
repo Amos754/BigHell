@@ -33,8 +33,9 @@ int	check_av_size(char *str)
 		return (0);
 }
 
-int	main_exit(int ac, char **av)
+int	main_exit(int ac, char **av, t_envb *env)
 {
+	free_env(env);
 	if (ac == 1)
 		return (printf("exit\n"), 0);
 	if (av[1] && (!(av[1][0] >= '0' && av[1][0] <= '9' || (av[1][0] == '+'
